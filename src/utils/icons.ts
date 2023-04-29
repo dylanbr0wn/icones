@@ -41,7 +41,7 @@ export function toComponentName(icon: string) {
   return icon.split(/:|-|_/).filter(Boolean).map(s => s[0].toUpperCase() + s.slice(1).toLowerCase()).join('')
 }
 
-export function ClearSvg(svgCode: string, reactJSX?: boolean) {
+export function clearAttributes(svgCode: string) {
   const el = document.createElement('div')
   el.innerHTML = svgCode
   const svg = el.getElementsByTagName('svg')[0]
@@ -51,7 +51,11 @@ export function ClearSvg(svgCode: string, reactJSX?: boolean) {
       continue
     svg.removeAttributeNode(key)
   }
-  return HtmlToJSX(el.innerHTML, reactJSX)
+  return el.innerHTML
+}
+
+export function ClearSvg(svgCode: string, reactJSX?: boolean) {
+  return HtmlToJSX(clearAttributes(svgCode), reactJSX)
 }
 
 export function SvgToJSX(svg: string, name: string, snippet: boolean) {
@@ -119,7 +123,7 @@ export function ${name}(props: JSX.IntrinsicElements['svg'], key: string) {
 }
 
 export function SvgToSvelte(svg: string) {
-  return ClearSvg(svg)
+  return clearAttributes(svg)
 }
 
 export async function getIconSnippet(icon: string, type: string, snippet = true, color = 'currentColor'): Promise<string | undefined> {
